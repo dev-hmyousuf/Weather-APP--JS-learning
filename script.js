@@ -18,23 +18,23 @@ function updateBackground(weatherCondition) {
     switch (weatherCondition) {
         case 'Clear':
             mainBody.classList.add('bg-sunny');
-            icon.src = "./img/clear.png";
+            icon.src = "https://i.postimg.cc/sgPJ7DZM/clear.png";
             break;
         case 'Clouds':
             mainBody.classList.add('bg-cloudy');
-            icon.src = "./img/clouds.png";
+            icon.src = "https://i.postimg.cc/3wKFB5gn/clouds.png";
             break;
         case 'Rain':
             mainBody.classList.add('bg-rainy');
-            icon.src = "./img/rain.png";
+            icon.src = "https://i.postimg.cc/XqyfJVb7/rain.png";
             break;
         case 'Drizzle':
             mainBody.classList.add('bg-drizzle');
-            icon.src = "./img/drizzle.png";
+            icon.src = "https://i.postimg.cc/V6v9xqZt/drizzle.png";
             break;
         case 'Mist':
             mainBody.classList.add('bg-misty');
-            icon.src = "./img/mist.png";
+            icon.src = "https://i.postimg.cc/hjY8cXN5/mist.png";
             break;
         default:
             mainBody.classList.add('bg-default');
@@ -120,7 +120,7 @@ window.onload = () => {
 };
 
 // City suggestions implement {With help of chatGpt}
-const geoApiUrl = "http://api.openweathermap.org/geo/1.0/direct";
+const geoApiUrl = "https://api.openweathermap.org/geo/1.0/direct";
 
 async function fetchCitySuggestions(query) {
     const response = await fetch(`${geoApiUrl}?q=${query}&limit=5&appid=${apiKey}`);
