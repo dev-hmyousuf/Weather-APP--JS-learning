@@ -17,9 +17,9 @@
                 ☁️ <!-- You can use an icon here if you want -->
             </div>
             <form action="" class="flex items-center gap-1" id="form">
-                <input type="text" name="cityName" id="cityInput" value="miami"
+                <input type="text" name="cityName" id="cityInput" value=""
                     class="bg-gray-900 text-white text-lg rounded-md p-2 w-full" placeholder="Enter city">
-                <input type="submit" class="p-2 rounded-md bg-teal-400" value="Submit">
+                <input type="submit" class="p-2 cursor-pointer  rounded-md bg-teal-400" value="Submit">
             </form>
         </div>
 
@@ -65,12 +65,13 @@
         let wind = document.getElementById("windDisplay");
         let feelsLike = document.getElementById("feelsLike");
         let getLocationBtn = document.getElementById("getLocationBtn");
+        let cityInputPlaceH = document.getElementById("cityInput")
 
         // Function to get weather by city name
         async function getWeather(cityName) {
             let response = await fetch(`${apiUrl}q=${cityName}&appid=${apiKey}`);
             let data = await response.json();
-            console.log(data)
+            cityInputPlaceH.setAttribute("placeholder", `${data.name}, ${data.sys.country}`);
             cityN.textContent = `${data.name}, ${data.sys.country} ` || 'Not Found';
             temp.textContent = data.main.temp || '-';
             humidity.textContent = data.main.humidity || '-';
@@ -82,13 +83,14 @@
         async function getCurrentLocWeather(lati, long) {
             const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lati}&lon=${long}&appid=${apiKey}`);
             let data = await response.json()
-            console.log(data)
+            cityInputPlaceH.setAttribute("placeholder", `${data.name}, ${data.sys.country}`);
 
             cityN.textContent = `${data.name}, ${data.sys.country} ` || 'Not Found';
             temp.textContent = data.main.temp || '-';
             humidity.textContent = data.main.humidity || '-';
             wind.textContent = data.wind.speed || '-';
             feelsLike.innerText = data.weather[0].description || '-';
+            
         }
 
         // Event listener for current location weather
@@ -112,6 +114,20 @@
             let city = document.getElementById("cityInput").value;
             getWeather(city);
         });
+
+        window.onload = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    getCurrentLocWeather(latitude, longitude);
+                }, (error) => {
+                    console.log("Error getting location: " + error.message);
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        }
     </script>
 </body>
 </html>
