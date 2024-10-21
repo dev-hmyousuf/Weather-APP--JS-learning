@@ -12,37 +12,35 @@ let getLocationBtn = document.getElementById("getLocationBtn");
 let cityInput = document.getElementById("cityInput");
 let suggestionsList = document.getElementById("suggestions");
 
-// Function to update background based on weather
 function updateBackground(weatherCondition) {
     mainBody.classList.remove('bg-sunny', 'bg-cloudy', 'bg-rainy', 'bg-misty', 'bg-drizzle');
 
     switch (weatherCondition) {
         case 'Clear':
             mainBody.classList.add('bg-sunny');
-            icon.src = "img/clear.png";
+            icon.src = "./img/clear.png";
             break;
         case 'Clouds':
             mainBody.classList.add('bg-cloudy');
-            icon.src = "img/clouds.png";
+            icon.src = "./img/clouds.png";
             break;
         case 'Rain':
             mainBody.classList.add('bg-rainy');
-            icon.src = "img/rain.png";
+            icon.src = "./img/rain.png";
             break;
         case 'Drizzle':
             mainBody.classList.add('bg-drizzle');
-            icon.src = "img/drizzle.png";
+            icon.src = "./img/drizzle.png";
             break;
         case 'Mist':
             mainBody.classList.add('bg-misty');
-            icon.src = "img/mist.png";
+            icon.src = "./img/mist.png";
             break;
         default:
             mainBody.classList.add('bg-default');
     }
 }
 
-// Function to get weather by city name
 async function getWeather(cityName) {
     try {
         let response = await fetch(`${apiUrl}q=${cityName}&appid=${apiKey}`);
@@ -67,7 +65,6 @@ async function getWeather(cityName) {
     }
 }
 
-// Get weather for current location
 async function getCurrentLocWeather(lat, lon) {
     try {
         const response = await fetch(`${apiUrl}lat=${lat}&lon=${lon}&appid=${apiKey}`);
@@ -87,7 +84,6 @@ async function getCurrentLocWeather(lat, lon) {
     }
 }
 
-// Event listener for current location weather
 getLocationBtn.addEventListener("click", function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -102,15 +98,13 @@ getLocationBtn.addEventListener("click", function() {
     }
 });
 
-// Event listener for form submit (search by city)
 form.addEventListener("submit", function(event) {
     event.preventDefault();
     let city = cityInput.value;
     getWeather(city);
-    suggestionsList.classList.add("hidden"); // Hide the suggestions on form submit
+    suggestionsList.classList.add("hidden"); 
 });
 
-// Load current location weather on page load
 window.onload = () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -125,7 +119,7 @@ window.onload = () => {
     }
 };
 
-// City suggestions
+// City suggestions implement {With help of chatGpt}
 const geoApiUrl = "http://api.openweathermap.org/geo/1.0/direct";
 
 async function fetchCitySuggestions(query) {
@@ -147,7 +141,7 @@ function displaySuggestions(cities) {
         suggestionItem.onclick = () => {
             cityInput.value = city.name;
             suggestionsList.classList.add("hidden");
-            getWeather(city.name);  // Fetch weather when a suggestion is clicked
+            getWeather(city.name);  
         };
         suggestionsList.appendChild(suggestionItem);
     });
