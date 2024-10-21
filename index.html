@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body class="bg-teal-50 flex items-center justify-center min-h-screen">
+
+    <div class="max-w-md w-full bg-gray-800 text-white rounded-lg shadow-lg p-6 relative overflow-hidden">
+        <!-- Background Shape -->
+        <div class="absolute -top-16 -left-16 bg-teal-100 w-48 h-48 rounded-full opacity-30"></div>
+        <!-- Weather Card Header with Search Input -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="text-6xl">
+                ☁️ <!-- You can use an icon here if you want -->
+            </div>
+            <form action="" class="flex items-center gap-1" id="form">
+                <input type="text" name="cityName" id="cityInput" value="miami"
+                    class="bg-gray-900 text-white text-lg rounded-md p-2 w-full" placeholder="Enter city">
+                <input type="submit" class="p-2 rounded-md bg-teal-400" value="Submit">
+            </form>
+        </div>
+
+        <!-- Weather Information -->
+        <div class="text-center">
+            <div id="temp" class="text-6xl font-bold">
+              
+            </div>
+            <div class="mt-2 text-xl" id="feelsLike">
+             
+            </div>
+            <div class="text-lg mt-2" id="cityNameDisplay">
+                
+            </div>
+        </div>
+
+        <!-- Weather Details -->
+        <div class="mt-6 flex justify-between text-sm">
+            <div>
+                Humidity: <span id="humidityDisplay"></span>
+            </div>
+            <div>
+                Wind: <span id="windDisplay"></span>
+            </div>
+        </div>
+
+        <div class="mt-4 text-blue-400 text-sm">
+            <a href="#">Show More +</a>
+        </div>
+
+        <button id="getLocationBtn" class="mt-6 bg-teal-600 hover:bg-teal-500 text-white rounded-md px-4 py-2 cursor-pointer w-full">
+            Get Current Location's Weather
+        </button>
+    </div>
+
+    <script>
+        let form = document.getElementById("form");
+        const apiKey = "b50f2931fb3f9e597f3c2d9e7f75b61a";
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&`;
+        let cityN = document.getElementById("cityNameDisplay");
+        let temp = document.getElementById("temp");
+        let humidity = document.getElementById("humidityDisplay");
+        let wind = document.getElementById("windDisplay");
+        let feelsLike = document.getElementById("feelsLike");
+        let getLocationBtn = document.getElementById("getLocationBtn");
+
+        // Function to get weather by city name
+        async function getWeather(cityName) {
+            let response = await fetch(`${apiUrl}q=${cityName}&appid=${apiKey}`);
+            let data = await response.json();
+            console.log(data)
+            cityN.textContent = `${data.name}, ${data.sys.country} ` || 'Not Found';
+            temp.textContent = data.main.temp || '-';
+            humidity.textContent = data.main.humidity || '-';
+            wind.textContent = data.wind.speed || '-';
+            feelsLike.innerText = data.weather[0].description || '-';
+        }
+
+        // Function to get weather by current location
+        async function getCurrentLocWeather(lati, long) {
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?units=metric&lat=${lati}&lon=${long}&appid=${apiKey}`);
+            let data = await response.json()
+            console.log(data)
+
+            cityN.textContent = `${data.name}, ${data.sys.country} ` || 'Not Found';
+            temp.textContent = data.main.temp || '-';
+            humidity.textContent = data.main.humidity || '-';
+            wind.textContent = data.wind.speed || '-';
+            feelsLike.innerText = data.weather[0].description || '-';
+        }
+
+        // Event listener for current location weather
+        getLocationBtn.addEventListener("click", function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    getCurrentLocWeather(latitude, longitude);
+                }, (error) => {
+                    console.log("Error getting location: " + error.message);
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        });
+
+        // Event listener for form submit (search by city)
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+            let city = document.getElementById("cityInput").value;
+            getWeather(city);
+        });
+    </script>
+</body>
+</html>
